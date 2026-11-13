@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/LuoStickmin/E4_HQ_VID/security/advisories/new
+    about: Report a vulnerability or key leak privately. Do not open a public issue.
+  - name: Legal notice
+    url: https://github.com/LuoStickmin/E4_HQ_VID/blob/main/LEGAL.md
+    about: Read the disclaimer and legal notice before contributing.
+  - name: Contributing guide
+    url: https://github.com/LuoStickmin/E4_HQ_VID/blob/main/CONTRIBUTING.md
+    about: Open-source declaration, DCO, profile checklist and rules.

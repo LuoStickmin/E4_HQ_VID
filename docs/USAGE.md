@@ -74,6 +74,10 @@ K8 is unknown, so a changed body makes the copied header digest stale.
 profile is verified; a flashable D3400 image needs K8 or an explicit
 `--allow-stale-header` decision (the latter may be rejected by the camera).
 
+D3400 also uses the combined "Movie frame size/quality" labels, so
+`profiles/d3400_hq64.json` patches both the separate 1080p60 frame-size label and
+the `1920x1080; 60p; high quality` combined label (English and Chinese).
+
 ## 5. Verify
 
 Decrypt the output and compare the modules:

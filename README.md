@@ -1,134 +1,269 @@
 # E4_HQ_VID
 
-EXPEED 4 DSLR movie bitrate / menu-label patcher.
+[中文](README.md) | [English](README.en.md)
 
-The goal is a **data-driven, multi-model** workflow:
+> ## ⚠️ 免责声明
+>
+> - 本项目与尼康（Nikon）没有任何关联，未获尼康授权或背书；Nikon、EXPEED 等是其各自权利人的商标。
+> - 仓库**不包含**任何固件、解密模块、密钥或可刷写镜像。你需要自行合法取得固件和 `key_all.json`。
+> - 修改、重封包、刷写固件可能导致相机变砖、失去保修、数据丢失，甚至违反当地法律。**风险由使用者自行承担。**
+> - 本项目用于自己拥有设备上的研究、互操作和格式分析，不意图规避版权保护或技术保护措施。请在所在司法辖区法律允许的范围内使用。
+> - 作者和贡献者不对任何直接或间接损失负责。刷机前请保留原厂固件和可恢复方案。
+>
+> 完整条款见 [LEGAL.md](LEGAL.md)。继续使用即表示你已阅读并同意这些条款。
 
-- patch the movie-mode table (bitrate fields) instead of hard-coded byte edits;
-- replace UTF-16 menu labels in place (same length, no pool reflow);
-- verify every stock value before writing;
-- verify the final module differs only in the declared fields;
-- repack the firmware with the new checksum/encryption toolchain.
+## 直接复现：D7200 C 1.04 当前状态
 
-## Supported models
+目标：1080p60 **HQ** 码率 `42/35 → 64/60 Mbps`，菜单显示 `1080 60p Hq`。
 
-| Model | Firmware | Profile | Status |
+需要：`D7200_0104.bin`（原厂 C 1.04）和覆盖该固件的 `key_all.json`。
+
+### Windows PowerShell
+
+```powershell
+git clone https://github.com/LuoStickmin/E4_HQ_VID.git
+cd E4_HQ_VID
+python -m pip install -r requirements.txt
+mkdir keys
+copy C:\path\to\key_all.json keys\key_all.json
+
+# 1. 解密
+python tools\decrypt_dslr2.py --key keys\key_all.json `
+  --firmware C:\path\to\D7200_0104.bin `
+  --out C:\path\to\D7200_0104.dec
+
+# 2. 只检查 stock，不写文件
+python nikon_movie_patch.py `
+  --module C:\path\to\D7200_0104.dec.modules\b1230_104.bin `
+  --config profiles\d7200_hq64.json --check
+
+# 3. 写补丁模块
+python nikon_movie_patch.py `
+  --module C:\path\to\D7200_0104.dec.modules\b1230_104.bin `
+  --config profiles\d7200_hq64.json `
+  --out C:\path\to\D7200_0104.dec.modules\b1230_104.hq64.bin `
+  --json C:\path\to\hq64.json
+
+# 4. 重封包
+python tools\repack_firmware.py --key keys\key_all.json `
+  --firmware C:\path\to\D7200_0104.bin `
+  --replace-module b1230_104.bin=C:\path\to\D7200_0104.dec.modules\b1230_104.hq64.bin `
+  --keep-tags --out C:\path\to\D7200_0104.hq64.bin
+```
+
+### Linux / macOS
+
+```bash
+git clone https://github.com/LuoStickmin/E4_HQ_VID.git
+cd E4_HQ_VID
+python3 -m pip install -r requirements.txt
+mkdir -p keys
+cp /path/to/key_all.json keys/key_all.json
+
+python3 tools/decrypt_dslr2.py --key keys/key_all.json \
+  --firmware /path/to/D7200_0104.bin --out /path/to/D7200_0104.dec
+
+python3 nikon_movie_patch.py \
+  --module /path/to/D7200_0104.dec.modules/b1230_104.bin \
+  --config profiles/d7200_hq64.json --check
+
+python3 nikon_movie_patch.py \
+  --module /path/to/D7200_0104.dec.modules/b1230_104.bin \
+  --config profiles/d7200_hq64.json \
+  --out /path/to/D7200_0104.dec.modules/b1230_104.hq64.bin \
+  --json /path/to/hq64.json
+
+python3 tools/repack_firmware.py --key keys/key_all.json \
+  --firmware /path/to/D7200_0104.bin \
+  --replace-module b1230_104.bin=/path/to/D7200_0104.dec.modules/b1230_104.hq64.bin \
+  --keep-tags --out /path/to/D7200_0104.hq64.bin
+```
+
+### 期望校验值
+
+| 文件 | SHA-256 |
+| --- | --- |
+| 原厂 `D7200_0104.bin` | `68cc80ff6308ab1b8cd05d3d13efee5637a0abb384996e60d5e17ffe894e8cec` |
+| 补丁模块 `b1230_104.hq64.bin` | `c278c63419f82cacdc62d91670dbb95a75e10e21572464e730000567c37ef4dc` |
+| 重封包 `D7200_0104.hq64.bin` | `e3c01185813a923fc87090bb175844ae17d677aba575b8070e2d624a01e7be47` |
+
+`--check` 应显示 `changed bytes: 29`。如果 stock 校验失败，**不要继续刷写**。
+SHA 一致的前提是同一原厂固件、同一工具版本和同一 profile。
+
+## 其他机型
+
+| 机型 | 原厂文件 | 主模块 | Profile | 封装 |
+| --- | --- | --- | --- | --- |
+| D7200 C 1.04 | `D7200_0104.bin` | `b1230_104.bin` | `d7200_hq64.json` | A |
+| D750 1.15 | `D750_0115.bin` | `b1010_115a.bin` | `d750_hq64.json` | A |
+| D810 1.14 | `D810_0114.bin` | `b920_114.bin` | `d810_hq64.json` | A |
+| D3400 C 1.13 | `D3400_0113.bin` | `b1480_113.bin` | `d3400_hq64.json` | **B** |
+
+把上面命令中的模块名/profile 换掉即可：
+
+```bash
+python nikon_movie_patch.py --module <b...>.bin \
+  --config profiles/<model>_hq64.json --check
+python nikon_movie_patch.py --module <b...>.bin \
+  --config profiles/<model>_hq64.json \
+  --out <b...>.hq64.bin --json <model>_hq64.json
+```
+
+**D3400 是 packaging B**：32 字节头含 `SHA1(body || K8)`，K8 未知。模块级 profile
+已验证，但默认重封包会拒绝 stale header；完整镜像需要 K8，或显式
+`--allow-stale-header`（相机可能拒刷）。详见 [docs/USAGE.md](docs/USAGE.md)。
+
+## 这个仓库是什么
+
+`E4_HQ_VID` 是一个面向 EXPEED 4 尼康单反的**数据驱动**电影模式补丁工具集：
+
+- 修改电影模式表中的码率字段（`rate_a/rate_b`），而不是硬编码字节；
+- 在同长度 UTF-16 菜单池中替换标签，不移动后续字符串；
+- 每个改动先校验 stock 值，最后校验差异只落在声明字段；
+- 用重封包工具重建目录、CRC、加密，并做容器自校验；
+- 用 profile 支持多机型，用扫描器支持新机型。
+
+它最早来自 D7200 1080p60 HQ 64 Mbps + 菜单 `Hq` 的实测需求；现在包含
+D7200、D750、D810、D3400 的 profile 和通用扫描/补丁流程。
+
+## 支持的机型
+
+| 机型 | Profile | 改动 | 校验状态 |
 | --- | --- | --- | --- |
-| D7200 | C 1.04 (`D7200_0104`) | `profiles/d7200_hq64.json` | stock-checked; current 1080p60 HQ 64/60 Mbps + `Hq` label; camera-tested by the author |
-| D750 | 1.15 (`D750_0115`) | `profiles/d750_hq64.json` | stock-checked; not camera-tested |
-| D810 | 1.14 (`D810_0114`) | `profiles/d810_hq64.json` | stock-checked; not camera-tested |
-| D3400 | C 1.13 (`D3400_0113`) | `profiles/d3400_hq64.json` | stock-checked; **packaging B** (header digest / K8 unknown), module patch works, full repack needs K8 or `--allow-stale-header`; not camera-tested |
+| D7200 C 1.04 | `d7200_hq64.json` | 1080p60 HQ 64/60 Mbps；`1080 60p Hq` | stock 校验 + 作者真机实测（码率/回放正常） |
+| D750 1.15 | `d750_hq64.json` | 1080p60 HQ 64/60 Mbps；`1080 60p Hq` | stock 校验；未真机验证 |
+| D810 1.14 | `d810_hq64.json` | 1080p60 HQ 64/60 Mbps；`1080 60p Hq` | stock 校验；未真机验证 |
+| D3400 C 1.13 | `d3400_hq64.json` | 1080p60 HQ 64/60 Mbps；帧尺寸 + 合并式 `Hq` 标签 | stock 校验；未真机验证；packaging B |
 
-D3400 uses the combined "Movie frame size/quality" labels, so its profile
-patches both the 1080p60 frame-size label and the
-`1920x1080; 60p; high quality` combined label.
+“stock 校验”指脚本确认了原厂表项、码率、标签偏移和长度；“真机实测”指作者
+在相机上刷入并确认码率和回放。两者不是一回事。
 
-A profile only encodes *where* the table and labels are.  If you have a
-decrypted module for another EXPEED 4 body, `scan_movie_modes.py` can emit a
-profile skeleton and you can add it without touching the patcher.
+## 工作原理
 
-## Quick start
+### 电影模式表
+
+尼康 EXPEED 4 的电影模式表是固定步长记录，典型为 22 项 × `0x1C` 字节：
+
+| 偏移 | 字段 |
+| --- | --- |
+| `0x00` | 宽高（`height × 65536 + width`） |
+| `0x04` | 时基分子 |
+| `0x08` | 时基分母 |
+| `0x0C` | 帧率字段 |
+| `0x10` | `rate_a`（HQ/高码率） |
+| `0x14` | `rate_b`（HQ/高码率） |
+| `0x18` | flag |
+
+profile 用 1-based `entry` 指定表项，例如 D7200 的 1080p60 HQ 是 entry 1。
+补丁只改 `rate_a/rate_b`，不动分辨率/时基/flag。
+
+### 菜单标签
+
+菜单标签是连续的 UTF-16LE 池。替换必须**同字符数**，否则后面的标签会整体
+错位。因此本仓库使用紧凑写法：
+
+```text
+1920x1080; 60p  ->  1080 60p Hq
+```
+
+D7200 的菜单字体没有大写 `Q` 字形，`HQ` 会显示成占位符；小写 `q` 在
+`Movie quality` 等标签里存在，所以用 `Hq`。
+
+### 校验与重封包
+
+- `nikon_movie_patch.py` 先读 stock，核对表项/标签，再写；
+- 写完检查差异只落在声明的 rate/label 范围；
+- `repack_firmware.py` 重建目录、模块 CRC、包 CRC，重加密，并用
+  `validate_firmware()` 自校验；
+- 对 packaging B 的 stale header digest 默认拒绝，避免产生看似有效但会被
+  相机拒绝的镜像。
+
+## 安装
+
+- Python 3.9+
+- NumPy：`python -m pip install -r requirements.txt`
+- 不包含固件和密钥；`key_all.json` 放 `keys/`（已 gitignore）或用 `--key` 指定。
+
+## 用法
+
+完整说明见 [docs/USAGE.md](docs/USAGE.md)，常见问题见
+[docs/FAQ.md](docs/FAQ.md)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。最小流程：
+
+1. `tools/decrypt_dslr2.py` 解密原厂镜像，得到 `*.dec.modules/`；
+2. `nikon_movie_patch.py --check` 校验 profile；
+3. `nikon_movie_patch.py --out` 写补丁模块；
+4. `tools/repack_firmware.py` 重封包；
+5. 再解密输出，确认只有目标模块/字段变化。
+
+## 菜单标签的三个硬约束
+
+1. **同长度**：UTF-16 池连续存放，不能变长；用空格补齐。
+2. **字形存在**：相机字体不是完整 Unicode；缺失字符会显示成方框/怪符号。
+   D7200 上大写 `Q` 缺失，用小写 `q` 解决。
+3. **不要改分隔符/后续字符串**：只替换声明的字节范围，脚本会拒绝越界差异。
+
+## D3400 / packaging B
+
+D3400 的固件头是 32 字节 packaging B，包含 `SHA1(body || K8)`。仓库目前没有
+K8，所以：
+
+- D3400 的 **module profile 已做 stock 校验**；
+- 默认 `repack_firmware.py` 会拒绝写出 stale header 的完整镜像；
+- `--allow-stale-header` 可以绕过，但相机可能拒绝，风险自负；
+- 在没有 K8 之前，不建议把 D3400 完整镜像当作可刷写产物。
+
+## 项目结构
+
+```text
+E4_HQ_VID/
+  nikon_movie_patch.py      数据驱动补丁器
+  scan_movie_modes.py       只读表/标签扫描器
+  profiles/                 各机型 profile
+  tools/                    解密 + 重封包工具链
+  tests/                    stock 校验/扫描器测试
+  docs/                     用法、加机型、FAQ
+  keys/                     key_all.json 放这里（gitignore）
+```
+
+## 测试
 
 ```bash
-pip install -r requirements.txt
+export D7200_MODULE=/path/to/b1230_104.bin
+export D750_MODULE=/path/to/b1010_115a.bin
+export D810_MODULE=/path/to/b920_114.bin
+export D3400_MODULE=/path/to/b1480_113.bin
+python -m unittest discover -s tests -v
 ```
 
-The tools do not ship firmware or keys.  Put your own `key_all.json` in
-`keys/` (git-ignored) or pass `--key`.
+测试只读 stock 模块；缺少某机型模块时自动跳过。D7200 测试还会断言当前补丁
+模块的精确 SHA。
 
-### 1. Decrypt a firmware image
+## 贡献
 
-```bash
-python tools/decrypt_dslr2.py --key keys/key_all.json \
-  --firmware D750_0115.bin --out D750_0115.dec
-```
+欢迎 profile、扫描器改进、文档和测试。开始前请阅读
+[CONTRIBUTING.md](CONTRIBUTING.md)。
 
-This creates `D750_0115.dec.modules/`.  The main module is the large
-`b*.bin` file (D750: `b1010_115a.bin`; D7200: `b1230_104.bin`; D810:
-`b920_114.bin`).
+**不要提交**固件、解密模块、密钥、可刷写镜像、个人信息或任何你没有权利
+分发的内容。贡献默认按 GPL-3.0 授权，并使用 DCO 签名。
 
-### 2. Check a profile against stock
+## 安全
 
-```bash
-python nikon_movie_patch.py \
-  --module D750_0115.dec.modules/b1010_115a.bin \
-  --config profiles/d750_hq64.json --check
-```
+漏洞、密钥泄露、供应链问题请按 [SECURITY.md](SECURITY.md) 私下报告，不要在
+公开 issue 里贴密钥或未公开的固件。
 
-### 3. Write the patched module
+## 法律与许可
 
-```bash
-python nikon_movie_patch.py \
-  --module D750_0115.dec.modules/b1010_115a.bin \
-  --config profiles/d750_hq64.json \
-  --out D750_0115.dec.modules/b1010_115a.hq64.bin \
-  --json hq64.json
-```
+- 代码和文档：**GPL-3.0**，见 [LICENSE](LICENSE)。
+- 第三方工具来源与版权：见 [NOTICE.md](NOTICE.md)。
+- 详细法律声明：见 [LEGAL.md](LEGAL.md)。
+- 行为准则：见 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
 
-### 4. Repack
+再次强调：本仓库不提供固件或密钥；刷机风险、法律合规和保修后果由使用者
+自行承担。
 
-```bash
-python tools/repack_firmware.py --key keys/key_all.json \
-  --firmware D750_0115.bin \
-  --replace-module b1010_115a.bin=D750_0115.dec.modules/b1010_115a.hq64.bin \
-  --keep-tags --out D750_0115.hq64.bin
-```
+## 致谢
 
-`repack_firmware.py` refuses to write a packaging-B image with a stale header
-digest (D850/D5 class) unless `--allow-stale-header` is passed.  The current
-profiles are packaging A (no header digest), so this does not apply.
-
-## What the profiles change
-
-Current D7200 profile (`d7200_hq64.json`):
-
-- table `0x2ACD8C`, entry 1 (1-based) = 1920×1080 60p HQ;
-- `rate_a/rate_b`: 42/35 → **64/60 Mbps**;
-- English label `0x59B05C`: `1920x1080; 60p` → `1080 60p Hq`;
-- Chinese label `0x6C9192`: `1920x1080;60p` → `1080 60p Hq`.
-
-D750 and D810 profiles do the same for their 1080p60 HQ entry.
-
-The label replacement is deliberately **same-length**: the menu labels live in
-a packed UTF-16 pool, and a longer string would shift every following label.
-That is also why the short `1080 60p Hq` form is used instead of
-`1920x1080; 60p HQ`.
-
-## Add a new model
-
-```bash
-python scan_movie_modes.py --module path/to/b1234_100.bin --model D3500 \
-  --emit-profile profiles/d3500_hq64.json
-```
-
-Then review the emitted profile:
-
-1. the scanner ranks candidate tables; confirm the base and the first entry
-   (resolution/timebase/rates/flag);
-2. confirm the EN/ZH `1920x1080; 60p` label offsets and lengths;
-3. set the target rates (default 64/60 Mbps);
-4. run `nikon_movie_patch.py --check` before writing;
-5. repack and verify by decrypting the output and comparing modules.
-
-See [docs/ADD_MODEL.md](docs/ADD_MODEL.md) for the schema and the pitfalls.
-
-## Repository layout
-
-```
-nikon_movie_patch.py      data-driven patcher
-scan_movie_modes.py       read-only table/label scanner
-profiles/                 per-model JSON profiles
-tools/                    decrypt + repack toolchain
-tests/                    profile/patcher tests
-docs/                     usage and add-model notes
-keys/                     put key_all.json here (git-ignored)
-```
-
-## Boundaries
-
-- No firmware, keys, decrypted modules, or flashable images are included.
-- Stock checks and container CRC checks prove the image is self-consistent, not
-  that the camera accepts it.
-- Camera testing is the only proof of behavior; keep the stock update file for
-  recovery.
-- Firmware copyright belongs to Nikon.  Use only on hardware you own.
+- [WonderLantern/nikon-fw-key-tool](https://github.com/WonderLantern/nikon-fw-key-tool)
+  的解密/重封包工具链（GPL-3.0）；
+- 提供 D7200/D750/D810/D3400 模块与测试反馈的贡献者；
+- 以及所有遵守法律、只在自有设备上做研究的人。
