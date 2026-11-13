@@ -32,7 +32,7 @@ It prints:
 - UTF-16 offsets for `Frame size/frame rate`, `Movie quality`,
   `1920x1080; 60p` and `1920x1080;60p`.
 
-For D7200/D750/D810 the top candidate is the real table; the runner-up is
+For D7200/D750/D810/D3400 the top candidate is the real table; the runner-up is
 usually the same table shifted by one entry.  Confirm by checking that the
 first entry is `1920x1080`, `60000/1001`, `42000000/35000000`, flag `1`, and
 that the 22 entries include 720p and 640×424.
