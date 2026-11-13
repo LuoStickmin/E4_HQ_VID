@@ -1,0 +1,33 @@
+{
+  "name": "d750-hq64",
+  "model": "D750",
+  "table": {
+    "offset": "0x2AA99C",
+    "stride": 28,
+    "count": 22,
+    "fields": {"wh": 0, "tb_num": 4, "tb_den": 8, "fps": 12,
+               "rate_a": 16, "rate_b": 20, "flag": 24}
+  },
+  "patches": [
+    {
+      "type": "movie_rate",
+      "entry": 1,
+      "rates": [64000000, 60000000],
+      "expect": {"width": 1920, "height": 1080,
+                 "tb_num": 60000, "tb_den": 1001,
+                 "rates": [42000000, 35000000], "flag": 1}
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x754A96",
+      "expect": "1920x1080; 60p",
+      "value": "1080 60p Hq   "
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x885E12",
+      "expect": "1920x1080;60p",
+      "value": "1080 60p Hq  "
+    }
+  ]
+}

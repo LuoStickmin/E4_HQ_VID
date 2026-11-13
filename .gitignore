@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.bin
+*.dec
+*.dec.modules/
+*.out/
+*.mod
+key_all.json
+keys/*.json
+firmware/
+dist/
+build/
