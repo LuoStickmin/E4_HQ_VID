@@ -24,8 +24,8 @@ D750_0115.dec.modules/
   _wma_ver01.00.00
 ```
 
-The main module is the large `b*.bin` (D7200: `b1230_104.bin`, D810:
-`b920_114.bin`).
+The main module is the large `b*.bin` (D7200: `b1230_104.bin`, D750:
+`b1010_115a.bin`, D810: `b920_114.bin`, D3400: `b1480_113.bin`).
 
 ## 2. Check stock
 
@@ -67,6 +67,12 @@ The new `repack_firmware.py`:
 - validates the output with `decrypt_firmware.validate_firmware()`;
 - refuses a stale packaging-B header digest unless `--allow-stale-header` is
   given (D850/D5 class; not needed for the current profiles).
+
+**D3400 is packaging B.**  Its 32-byte header contains `SHA1(body || K8)` and
+K8 is unknown, so a changed body makes the copied header digest stale.
+`repack_firmware.py` will refuse the image by default.  The module-level
+profile is verified; a flashable D3400 image needs K8 or an explicit
+`--allow-stale-header` decision (the latter may be rejected by the camera).
 
 ## 5. Verify
 

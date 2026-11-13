@@ -1,0 +1,45 @@
+{
+  "name": "d3400-hq64",
+  "model": "D3400",
+  "table": {
+    "offset": "0x335B00",
+    "stride": 28,
+    "count": 22,
+    "fields": {"wh": 0, "tb_num": 4, "tb_den": 8, "fps": 12,
+               "rate_a": 16, "rate_b": 20, "flag": 24}
+  },
+  "patches": [
+    {
+      "type": "movie_rate",
+      "entry": 1,
+      "rates": [64000000, 60000000],
+      "expect": {"width": 1920, "height": 1080,
+                 "tb_num": 60000, "tb_den": 1001,
+                 "rates": [42000000, 35000000], "flag": 1}
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x5F695A",
+      "expect": "1920x1080; 60p",
+      "value": "1080 60p Hq   "
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x6D6200",
+      "expect": "1920x1080;60p",
+      "value": "1080 60p Hq  "
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x5F6992",
+      "expect": "1920x1080; 60p; high quality",
+      "value": "1080 60p Hq                 "
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x6D6234",
+      "expect": "1920x1080;60p;高品质",
+      "value": "1080 60p Hq      "
+    }
+  ]
+}

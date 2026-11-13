@@ -17,7 +17,11 @@ The goal is a **data-driven, multi-model** workflow:
 | D7200 | C 1.04 (`D7200_0104`) | `profiles/d7200_hq64.json` | stock-checked; current 1080p60 HQ 64/60 Mbps + `Hq` label; camera-tested by the author |
 | D750 | 1.15 (`D750_0115`) | `profiles/d750_hq64.json` | stock-checked; not camera-tested |
 | D810 | 1.14 (`D810_0114`) | `profiles/d810_hq64.json` | stock-checked; not camera-tested |
-| D3400 | any | `profiles/d3400_template.json` | **template**: a decrypted D3400 module is needed; use `scan_movie_modes.py` |
+| D3400 | C 1.13 (`D3400_0113`) | `profiles/d3400_hq64.json` | stock-checked; **packaging B** (header digest / K8 unknown), module patch works, full repack needs K8 or `--allow-stale-header`; not camera-tested |
+
+D3400 uses the combined "Movie frame size/quality" labels, so its profile
+patches both the 1080p60 frame-size label and the
+`1920x1080; 60p; high quality` combined label.
 
 A profile only encodes *where* the table and labels are.  If you have a
 decrypted module for another EXPEED 4 body, `scan_movie_modes.py` can emit a
@@ -93,8 +97,8 @@ That is also why the short `1080 60p Hq` form is used instead of
 ## Add a new model
 
 ```bash
-python scan_movie_modes.py --module path/to/b1234_100.bin --model D3400 \
-  --emit-profile profiles/d3400_hq64.json
+python scan_movie_modes.py --module path/to/b1234_100.bin --model D3500 \
+  --emit-profile profiles/d3500_hq64.json
 ```
 
 Then review the emitted profile:

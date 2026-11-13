@@ -1,4 +1,8 @@
-# Adding a model (D3400 and others)
+# Adding a model (D3500 and others)
+
+> The D3400 profile is already included (`profiles/d3400_hq64.json`); it uses
+> the combined "Movie frame size/quality" labels and packaging B.  This page is
+> the generic recipe for a model that is not in `profiles/` yet.
 
 The patcher is model-agnostic; a model is just a JSON profile.  The scanner
 finds the two things a profile needs: the movie-mode table and the UTF-16 menu
@@ -14,12 +18,12 @@ Decrypt the update image with `tools/decrypt_dslr2.py`, then pick the large
 | D7200 | `b1230_104.bin` |
 | D750 | `b1010_115a.bin` |
 | D810 | `b920_114.bin` |
-| D3400 | `b1xxx_yyy.bin` (check the decrypted directory) |
+| D3500 | `b1xxx_yyy.bin` (check the decrypted directory) |
 
 ## 2. Run the scanner
 
 ```bash
-python scan_movie_modes.py --module b1xxx_yyy.bin --model D3400
+python scan_movie_modes.py --module b1xxx_yyy.bin --model D3500
 ```
 
 It prints:
@@ -36,8 +40,8 @@ that the 22 entries include 720p and 640×424.
 ## 3. Emit a skeleton
 
 ```bash
-python scan_movie_modes.py --module b1xxx_yyy.bin --model D3400 \
-  --emit-profile profiles/d3400_hq64.json
+python scan_movie_modes.py --module b1xxx_yyy.bin --model D3500 \
+  --emit-profile profiles/d3500_hq64.json
 ```
 
 Review the output before using it:
@@ -55,8 +59,8 @@ Review the output before using it:
 
 ```json
 {
-  "name": "d3400-hq64",
-  "model": "D3400",
+  "name": "d3500-hq64",
+  "model": "D3500",
   "table": {"offset": "0x...", "stride": 28, "count": 22,
             "fields": {"wh": 0, "tb_num": 4, "tb_den": 8, "fps": 12,
                        "rate_a": 16, "rate_b": 20, "flag": 24}},
@@ -89,11 +93,11 @@ Rules:
 
 ```bash
 python nikon_movie_patch.py --module b1xxx_yyy.bin \
-  --config profiles/d3400_hq64.json --check
+  --config profiles/d3500_hq64.json --check
 
 python nikon_movie_patch.py --module b1xxx_yyy.bin \
-  --config profiles/d3400_hq64.json \
-  --out b1xxx_yyy.hq64.bin --json d3400_hq64.json
+  --config profiles/d3500_hq64.json \
+  --out b1xxx_yyy.hq64.bin --json d3500_hq64.json
 ```
 
 Then repack with `tools/repack_firmware.py` and verify by decrypting the output.
