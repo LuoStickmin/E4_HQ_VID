@@ -296,6 +296,10 @@ export D7200_MODULE=/path/to/b1230_104.bin
 export D750_MODULE=/path/to/b1010_115a.bin
 export D810_MODULE=/path/to/b920_114.bin
 export D3400_MODULE=/path/to/b1480_113.bin
+export D4S_MODULE=/path/to/b1140_133f.bin
+export D5500_MODULE=/path/to/b1120_102.bin
+export D5600_MODULE=/path/to/b1530_120.bin
+export D810A_MODULE=/path/to/b1410_102b.bin
 python -m unittest discover -s tests -v
 ```
 
@@ -331,5 +335,5 @@ warranty consequences are the user's responsibility.
 
 - [WonderLantern/nikon-fw-key-tool](https://github.com/WonderLantern/nikon-fw-key-tool)
   for the decryption/repack toolchain (GPL-3.0);
-- contributors who provided D7200/D750/D810/D3400 modules and test feedback;
+- contributors who provided D7200/D750/D810/D810A/D4S/D5500/D5600/D3400 modules and test feedback;
 - everyone who does this research legally and only on hardware they own.
