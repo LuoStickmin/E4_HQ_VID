@@ -1,0 +1,52 @@
+{
+  "name": "d810a_hq64",
+  "model": "D810A",
+  "table": {
+    "offset": "0x28B940",
+    "stride": 28,
+    "count": 22,
+    "fields": {
+      "wh": 0,
+      "tb_num": 4,
+      "tb_den": 8,
+      "fps": 12,
+      "rate_a": 16,
+      "rate_b": 20,
+      "flag": 24
+    }
+  },
+  "patches": [
+    {
+      "type": "movie_rate",
+      "entry": 1,
+      "rates": [
+        64000000,
+        60000000
+      ],
+      "expect": {
+        "width": 1920,
+        "height": 1080,
+        "tb_num": 60000,
+        "tb_den": 1001,
+        "rates": [
+          42000000,
+          35000000
+        ],
+        "flag": 1
+      }
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x5CADEA",
+      "expect": "1920x1080; 60p",
+      "value": "1080 60p Hq   "
+    },
+    {
+      "type": "utf16_label",
+      "offset": "0x7093CA",
+      "expect": "1920x1080;60p",
+      "value": "1080 60p Hq  "
+    }
+  ],
+  "module": "b1410_102b.bin"
+}

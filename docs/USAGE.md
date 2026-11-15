@@ -65,14 +65,29 @@ The new `repack_firmware.py`:
 - rebuilds the directory and both CRC levels;
 - re-encrypts when the input was encrypted;
 - validates the output with `decrypt_firmware.validate_firmware()`;
-- refuses a stale packaging-B header digest unless `--allow-stale-header` is
-  given (D850/D5 class; not needed for the current profiles).
+- refuses a stale packaging-B header digest unless `--k8` (recompute) or
+  `--allow-stale-header` (test only) is given.  D7200/D750/D810 are packaging A,
+  so this does not affect them.
 
-**D3400 is packaging B.**  Its 32-byte header contains `SHA1(body || K8)` and
-K8 is unknown, so a changed body makes the copied header digest stale.
-`repack_firmware.py` will refuse the image by default.  The module-level
-profile is verified; a flashable D3400 image needs K8 or an explicit
-`--allow-stale-header` decision (the latter may be rejected by the camera).
+**D3400 is packaging B.**  Its 32-byte header contains `SHA1(body || K8)`.
+D3400's K8 was recovered on 2026-11-15 as `AF08FBDBB582B587`; pass it to
+`repack_firmware.py` as a JSON file:
+
+```json
+{"K8": "AF08FBDBB582B587", "self_check": "749237c5e12cfbf8d70e34ef363d9de3e243a6bb81cc9d6b7ab3d29a00580cac"}
+```
+
+```bash
+python tools/repack_firmware.py --key keys/key_all.json \
+  --firmware D3400_0113.bin \
+  --replace-module b1480_113.bin=D3400_0113.dec.modules/b1480_113.hq64.bin \
+  --k8 keys/d3400_0113_k8.json --keep-tags --out D3400_0113.hq64.bin
+```
+
+The tool verifies the stock digest before writing and recomputes it for the new
+body.  Without `--k8` it still refuses the image by default.  A matching digest
+does not prove the camera accepts the image; `--allow-stale-header` remains a
+test-only escape hatch.
 
 D3400 also uses the combined "Movie frame size/quality" labels, so
 `profiles/d3400_hq64.json` patches both the separate 1080p60 frame-size label and
@@ -132,5 +147,5 @@ python tools/decrypt_dslr2.py --key keys/key_all.json \
 | `label ... replacement length ... != stock length` | packed UTF-16 pool; use a same-length label or a shorter compact form |
 | `entry ... rates: stock ..., expected ...` | wrong firmware revision or wrong table offset |
 | `diff outside declared fields` | profile points at the wrong field; do not flash |
-| `stale packaging-B header digest` | D850/D5-class wrapper; needs K8 or `--allow-stale-header` (not supported by this repo) |
+| `stale packaging-B header digest` | wrapper B (e.g. D3400); pass `--k8 <json>` to verify/recompute, or `--allow-stale-header` for CRC/QEMU tests only. This repo ships no K8 files; D3400's is `AF08FBDBB582B587` |
 | menu shows a placeholder glyph | camera font lacks that character; use a character present in stock labels (e.g. lowercase `q` instead of uppercase `Q`) |

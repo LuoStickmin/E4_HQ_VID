@@ -15,6 +15,10 @@ CASES = [
     ("d750_hq64.json", "D750_MODULE", "b1010_115a.bin", 29),
     ("d810_hq64.json", "D810_MODULE", "b920_114.bin", 29),
     ("d3400_hq64.json", "D3400_MODULE", "b1480_113.bin", 69),
+    ("d4s_hq64.json", "D4S_MODULE", "b1140_133f.bin", 29),
+    ("d5500_hq64.json", "D5500_MODULE", "b1120_102.bin", 69),
+    ("d5600_hq64.json", "D5600_MODULE", "b1530_120.bin", 69),
+    ("d810a_hq64.json", "D810A_MODULE", "b1410_102b.bin", 29),
 ]
 
 

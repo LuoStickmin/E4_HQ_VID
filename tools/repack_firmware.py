@@ -38,13 +38,13 @@ decrypt_firmware.validate_firmware() before anything is written.
         --patch-module b1010_115a.bin:0x1000:deadbeef --out D750_0115.patched.bin
 
 Header digest (packaging B only): the 32-byte header's first 20 bytes are
-SHA1(decrypted_body || K8), where K8 is a per-model 8-byte key. K8 has not
-been recovered for the DSLR samples, so the header is copied verbatim. If an
-edit changes the body, the copied digest is guaranteed stale: the tool refuses
-to write such an image unless --allow-stale-header is passed. Pass --k8 with a
-JSON file ({"K8": "<16 hex chars>", "self_check": "<sha256>"} is the format
-produced for the upstream Z 8/Z 9 case) to verify the stock digest and
-recompute it for the output.
+SHA1(decrypted_body || K8), where K8 is a per-model 8-byte key. K8 has been
+recovered for the four DSLR wrapper-B samples D850/D5/D500/D3400 (D3400:
+AF08FBDBB582B587). Pass --k8 with a JSON file
+({"K8": "<16 hex chars>", "self_check": "<sha256>"}) to verify the stock digest
+and recompute it for the output. Without --k8 the header is copied verbatim;
+if an edit changes the body the copied digest is guaranteed stale, and the tool
+refuses to write unless --allow-stale-header is given.
 
 Directory tags: the 8 reserved bytes are zero in every DSLR sample except the
 D750 `_wma_ver01.00.00` entry, whose tag is ASCII `crc.bin`. A strict

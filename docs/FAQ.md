@@ -32,10 +32,11 @@ D7200 的菜单字体没有大写 `Q` 字形，`HQ` 的 `Q` 会变成方框/怪�
 
 ## 为什么 D3400 不能直接生成可刷镜像？
 
-D3400 是 **packaging B**：32 字节头包含 `SHA1(body || K8)`。K8 未知，改了 body
-就会让 header digest 过期。`repack_firmware.py` 默认拒绝这种镜像；
-`--allow-stale-header` 可以绕过，但相机可能拒刷。D3400 的模块级 profile 仍然
-可以校验和使用。
+D3400 是 **packaging B**：32 字节头包含 `SHA1(body || K8)`。它的 K8 已于
+2026-11-15 恢复为 `AF08FBDBB582B587`，所以可以用 `repack_firmware.py --k8`
+校验原镜像摘要、并为新 body 重算；不传 `--k8` 时工具仍默认拒绝这种镜像。
+`--allow-stale-header` 只适合 CRC/QEMU 测试。摘要正确也不等于相机接受；
+D3400 的模块级 profile 仍然可以校验和使用。
 
 ## 为什么 stock 校验失败？
 
@@ -73,9 +74,10 @@ D3400 是 69 B。超过这个范围说明 profile 有问题。
 
 ## 支持 D850 / D5 / Z 系列吗？
 
-当前 profile 只覆盖 D7200、D750、D810、D3400。D850/D5 是 packaging B，且
-header digest/K8 问题更复杂；Z 系列是不同平台。不要直接套用 EXPEED 4 的偏移。
-可以用 `scan_movie_modes.py` 先扫描，但需要自己确认表/标签和封装。
+当前 profile 只覆盖 D7200、D750、D810、D3400。D850/D5 是 EXPEED 5 的
+packaging B；它们的 K8 虽已由同作者恢复，但不在本仓库的 E4 profile 范围内。
+Z 系列是不同平台。不要直接套用 EXPEED 4 的偏移。可以用
+`scan_movie_modes.py` 先扫描，但需要自己确认表/标签和封装。
 
 ## 可以加 AVI / MP4 录制吗？
 
@@ -96,10 +98,11 @@ python scan_movie_modes.py --module <b...>.bin --model <MODEL>
 
 见 [SUPPORT.md](../SUPPORT.md) 的完整矩阵：D4S、D750、D810、D810A、D7200、
 D5300、D5500、D5600、D3300、D3400、D3500。已有 profile 的是 D7200、D750、
-D810、D3400；其余是 scanner-ready 或待分析，不代表已经验证。
+D810、D810A、D4S、D5500、D5600、D3400；D5300/D3300 待分析，D3500 缺完整
+固件/模块。**只有 D7200 是作者真机实测**，其余 profile 只做了 stock 校验。
 
 ## 为什么 README 里 D7200 有精确 SHA，其他机型没有？
 
 D7200 是作者实际刷入并验证的当前状态，所以给出模块和镜像的精确 SHA。
-D750/D810/D3400 只做了 stock 校验，没有在相机上验证；不同固件版本/重封包
-环境可能产生不同字节，不能给出统一的“已实测”SHA。
+D750/D810/D810A/D4S/D5500/D5600/D3400 只做了 stock 校验，没有在相机上验证；
+不同固件版本/重封包环境可能产生不同字节，不能给出统一的“已实测”SHA。

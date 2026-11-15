@@ -5,6 +5,31 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+- Documentation audit: D3400's packaging-B `K8` is no longer "unknown". It was
+  recovered as `AF08FBDBB582B587` on 2026-11-15 (see the sibling
+  Nikon-Expeed-4-and-5-firmware-tool `docs/k8-dslr.md`); `repack_firmware.py --k8`
+  can now verify and recompute the header digest. Camera acceptance remains
+  unverified.
+- Removed stale "K8 unknown / cannot repack" wording from README, SUPPORT,
+  USAGE and FAQ.
+
+## [0.4.0] - 2026-11-15
+
+### Added
+- D4S 1.33 profile (`d4s_hq64.json`, table `0x262F48`).
+- D5500 1.02 profile (`d5500_hq64.json`, table `0x2D0334`, combined labels).
+- D5600 1.20 profile (`d5600_hq64.json`, table `0x301C8C`, combined labels,
+  packaging B with K8 unknown).
+- D810A 1.03 profile (`d810a_hq64.json`, table `0x28B940`).
+- `module` field in every profile, so the main module is explicit.
+
+### Changed
+- Eight profiles now ship: D7200, D750, D810, D810A, D4S, D5500, D5600, D3400.
+- Only D7200 is camera-tested; all other profiles are stock-checked, not flashed.
+- D5300/D3300 are marked needs-analysis (standard table/labels not found in the
+  local samples); D3500 is marked missing-data (no complete firmware/module).
+
 ## [0.3.0] - 2026-11-15
 
 ### Added

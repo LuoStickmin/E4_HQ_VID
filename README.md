@@ -97,6 +97,10 @@ SHA 一致的前提是同一原厂固件、同一工具版本和同一 profile�
 | D7200 C 1.04 | `D7200_0104.bin` | `b1230_104.bin` | `d7200_hq64.json` | A |
 | D750 1.15 | `D750_0115.bin` | `b1010_115a.bin` | `d750_hq64.json` | A |
 | D810 1.14 | `D810_0114.bin` | `b920_114.bin` | `d810_hq64.json` | A |
+| D810A 1.03 | `D810A_0103.bin` | `b1410_102b.bin` | `d810a_hq64.json` | A |
+| D4S 1.33 | `D4S_0133.bin` | `b1140_133f.bin` | `d4s_hq64.json` | A |
+| D5500 1.02 | `D5500_0102.bin` | `b1120_102.bin` | `d5500_hq64.json` | A |
+| D5600 1.20 | `D5600_0120.bin` | `b1530_120.bin` | `d5600_hq64.json` | **B** |
 | D3400 C 1.13 | `D3400_0113.bin` | `b1480_113.bin` | `d3400_hq64.json` | **B** |
 
 把上面命令中的模块名/profile 换掉即可：
@@ -109,9 +113,11 @@ python nikon_movie_patch.py --module <b...>.bin \
   --out <b...>.hq64.bin --json <model>_hq64.json
 ```
 
-**D3400 是 packaging B**：32 字节头含 `SHA1(body || K8)`，K8 未知。模块级 profile
-已验证，但默认重封包会拒绝 stale header；完整镜像需要 K8，或显式
-`--allow-stale-header`（相机可能拒刷）。详见 [docs/USAGE.md](docs/USAGE.md)。
+**D3400 是 packaging B**：32 字节头含 `SHA1(body || K8)`。D3400 的 K8 已于
+2026-11-15 恢复为 `AF08FBDBB582B587`；模块级 profile 已验证，完整镜像已用
+`--k8` 做重封包 + 解密回读验证（容器层一致）。相机是否接受重封包仍未做
+真机验证。详见 [docs/USAGE.md](docs/USAGE.md) 与同作者的
+[k8-dslr 记录](https://github.com/LuoStickmin/Nikon-Expeed-4-and-5-firmware-tool/blob/main/docs/k8-dslr.md)。
 
 ## 这个仓库是什么
 
@@ -124,26 +130,29 @@ python nikon_movie_patch.py --module <b...>.bin \
 - 用 profile 支持多机型，用扫描器支持新机型。
 
 它最早来自 D7200 1080p60 HQ 64 Mbps + 菜单 `Hq` 的实测需求；现在包含
-D7200、D750、D810、D3400 的 profile 和通用扫描/补丁流程。
+D7200/D750/D810/D810A/D3400/D4S/D5500/D5600 八个 profile，以及通用扫描/补丁流程。
 
 ## 支持的机型
 
-EXPEED 4 单反共 11 款；已有 profile 的 4 款可以直接用，其余先用扫描器加。
+EXPEED 4 单反共 11 款；已有 profile 的 8 款可以直接用，剩余 3 款受固件/布局限制。
 完整状态、封装和备注见 [SUPPORT.md](SUPPORT.md)。
+
+> **严谨说明：只有 D7200 由作者真机实测。** 其他机型都是 stock 校验，不等于
+> 已经在相机上验证，更不等于“可安全刷写”。
 
 | 机型 | Profile | 状态 |
 | --- | --- | --- |
 | D7200 C 1.04 | `d7200_hq64.json` | ✅ 真机实测；64/60 Mbps + `Hq` |
 | D750 1.15 | `d750_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
 | D810 1.14 | `d810_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
-| D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock 校验；packaging B，K8 未知 |
-| D810A | — | 🟨 scanner-ready；不要直接套 D810 偏移 |
-| D4S | — | 🟨 scanner-ready；无本地模块 |
-| D5300 | — | 🟨 scanner-ready；无本地模块 |
-| D5500 | — | 🟨 scanner-ready；无本地模块 |
-| D5600 | — | 🟨 scanner-ready；无本地模块 |
+| D810A 1.03 | `d810a_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
+| D4S 1.33 | `d4s_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
+| D5500 1.02 | `d5500_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
+| D5600 1.20 | `d5600_hq64.json` | 🟩 stock 校验；packaging B，该机型 K8 未恢复 |
+| D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock 校验；packaging B，K8 已恢复，完整镜像容器层已验证 |
+| D5300 | — | 🟧 待分析；本地 1.03 样本未自动识别标准表/标签 |
 | D3300 | — | 🟧 待分析；本地 1.02 样本未自动识别标准表/标签 |
-| D3500 | — | 🟨 scanner-ready；无本地模块 |
+| D3500 | — | 🟥 缺完整固件/模块，暂时无法做 profile |
 
 状态说明：
 
@@ -152,13 +161,17 @@ EXPEED 4 单反共 11 款；已有 profile 的 4 款可以直接用，其余先�
 - 🟨 **scanner-ready**：没有 profile，可用 `scan_movie_modes.py` 在解密模块上
   定位表和标签，再写 profile；
 - 🟧 **待分析**：有本地样本，但标准 0x1C 表/UTF-16 标签没有自动识别；
+- 🟥 **缺数据**：没有可用完整固件/模块，无法生成 profile；
 - ⛔ **不在范围**：D5/D500/D7500/D850 是 EXPEED 5，Z 系列/Nikon 1 是不同平台。
 
 ### 最近更新
 
-- **2026-11-15** — 新增完整 EXPEED 4 支持矩阵 [SUPPORT.md](SUPPORT.md)：
-  D4S/D810A/D5300/D5500/D5600/D3300/D3500 明确标记状态；D3400 仍是
-  packaging B、K8 未知。
+- **2026-11-15** — 新增 D4S/D5500/D5600/D810A 四个 profile（stock 校验）；
+  D5300/D3300 标记为待分析，D3500 标记为缺完整固件。当前共 8 个 profile，
+  **只有 D7200 真机实测**。
+- **2026-11-15** — 新增完整 EXPEED 4 支持矩阵 [SUPPORT.md](SUPPORT.md)；
+  D3400 K8 已恢复为 `AF08FBDBB582B587`，`--k8` 路径可用，但相机接受度未验证。
+- **2026-11-15** — 文档复核：移除“D3400 K8 未知”的过期条目。
 - **2026-11-13** — D3400 C 1.13 profile；双语 README、CONTRIBUTING、LEGAL、
   SECURITY、CODE_OF_CONDUCT、CHANGELOG、FAQ。
 - **2026-11-13** — 初始 D7200/D750/D810 profile、扫描器、解密/重封包工具链。
@@ -231,13 +244,14 @@ D7200 的菜单字体没有大写 `Q` 字形，`HQ` 会显示成占位符；小�
 
 ## D3400 / packaging B
 
-D3400 的固件头是 32 字节 packaging B，包含 `SHA1(body || K8)`。仓库目前没有
-K8，所以：
+D3400 的固件头是 32 字节 packaging B，包含 `SHA1(body || K8)`。D3400 的 K8
+已于 2026-11-15 恢复为 `AF08FBDBB582B587`，所以：
 
 - D3400 的 **module profile 已做 stock 校验**；
-- 默认 `repack_firmware.py` 会拒绝写出 stale header 的完整镜像；
-- `--allow-stale-header` 可以绕过，但相机可能拒绝，风险自负；
-- 在没有 K8 之前，不建议把 D3400 完整镜像当作可刷写产物。
+- 完整镜像可用 `repack_firmware.py --k8 <k8.json>` 校验原镜像摘要并重算；
+- 不给 `--k8` 时，工具仍会拒绝写出 stale header；`--allow-stale-header`
+  只适合 CRC/QEMU 测试；
+- 即使摘要正确，也不代表相机接受该镜像；刷机风险仍然存在。
 
 ## 项目结构
 

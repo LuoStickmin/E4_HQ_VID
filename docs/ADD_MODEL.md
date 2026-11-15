@@ -108,6 +108,7 @@ Then repack with `tools/repack_firmware.py` and verify by decrypting the output.
 - Whether 64 Mbps is within the encoder/thermal/card limits for that body.
 - Whether the menu font has the glyphs you choose.
 - Whether the model's wrapper is packaging A or B (check `repack_firmware.py`
-  output; packaging B needs K8 or a stale-header decision).
+  output; packaging B needs that model's K8, or a stale-header decision for
+  tests only. D3400's K8 is known; other models need the 65,536-entry search).
 
 Always keep the stock update file for recovery.

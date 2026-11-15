@@ -104,6 +104,10 @@ flash**. The hashes assume the same stock image, tool version and profile.
 | D7200 C 1.04 | `D7200_0104.bin` | `b1230_104.bin` | `d7200_hq64.json` | A |
 | D750 1.15 | `D750_0115.bin` | `b1010_115a.bin` | `d750_hq64.json` | A |
 | D810 1.14 | `D810_0114.bin` | `b920_114.bin` | `d810_hq64.json` | A |
+| D810A 1.03 | `D810A_0103.bin` | `b1410_102b.bin` | `d810a_hq64.json` | A |
+| D4S 1.33 | `D4S_0133.bin` | `b1140_133f.bin` | `d4s_hq64.json` | A |
+| D5500 1.02 | `D5500_0102.bin` | `b1120_102.bin` | `d5500_hq64.json` | A |
+| D5600 1.20 | `D5600_0120.bin` | `b1530_120.bin` | `d5600_hq64.json` | **B** |
 | D3400 C 1.13 | `D3400_0113.bin` | `b1480_113.bin` | `d3400_hq64.json` | **B** |
 
 Use the same commands with the module/profile swapped:
@@ -116,11 +120,12 @@ python nikon_movie_patch.py --module <b...>.bin \
   --out <b...>.hq64.bin --json <model>_hq64.json
 ```
 
-**D3400 is packaging B**: its 32-byte header contains `SHA1(body || K8)` and K8
-is unknown. The module-level profile is verified, but the default repack refuses
-a stale header. A complete image needs K8, or an explicit
-`--allow-stale-header` (the camera may reject it). See
-[docs/USAGE.md](docs/USAGE.md).
+**D3400 is packaging B**: its 32-byte header contains `SHA1(body || K8)`. The
+D3400 K8 was recovered on 2026-11-15 as `AF08FBDBB582B587`; the module-level
+profile is verified, and a complete image has been repacked with `--k8` and
+decrypted again to confirm container-level consistency. Camera acceptance is
+still unverified. See [docs/USAGE.md](docs/USAGE.md) and the author's
+[k8-dslr record](https://github.com/LuoStickmin/Nikon-Expeed-4-and-5-firmware-tool/blob/main/docs/k8-dslr.en.md).
 
 ## What this repository is
 
@@ -135,26 +140,31 @@ a stale header. A complete image needs K8, or an explicit
 - support multiple bodies with profiles and bring up new bodies with a scanner.
 
 It started from the D7200 1080p60 HQ 64 Mbps + `Hq` menu experiment and now
-includes D7200, D750, D810 and D3400 profiles plus a generic scan/patch flow.
+includes eight profiles (D7200/D750/D810/D810A/D3400/D4S/D5500/D5600) plus a
+generic scan/patch flow.
 
 ## Supported models
 
-There are 11 EXPEED 4 DSLRs. Four have profiles ready; the rest can be brought
-up with the scanner. Full status, packaging and notes: [SUPPORT.md](SUPPORT.md).
+There are 11 EXPEED 4 DSLRs. Eight have profiles ready; three are blocked by
+firmware/layout limitations. Full status, packaging and notes: [SUPPORT.md](SUPPORT.md).
+
+> **Rigor note: only D7200 has been camera-tested by the author.** All other
+> profiles are stock-checked, not flashed, and are not a guarantee that the
+> camera accepts the image.
 
 | Model | Profile | Status |
 | --- | --- | --- |
 | D7200 C 1.04 | `d7200_hq64.json` | ✅ camera-tested; 64/60 Mbps + `Hq` |
 | D750 1.15 | `d750_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
 | D810 1.14 | `d810_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
-| D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock-checked; packaging B, K8 unknown |
-| D810A | — | 🟨 scanner-ready; do not reuse D810 offsets blindly |
-| D4S | — | 🟨 scanner-ready; no local module |
-| D5300 | — | 🟨 scanner-ready; no local module |
-| D5500 | — | 🟨 scanner-ready; no local module |
-| D5600 | — | 🟨 scanner-ready; no local module |
+| D810A 1.03 | `d810a_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
+| D4S 1.33 | `d4s_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
+| D5500 1.02 | `d5500_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
+| D5600 1.20 | `d5600_hq64.json` | 🟩 stock-checked; packaging B, this model's K8 is not recovered |
+| D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock-checked; packaging B, K8 recovered, full image container-tested |
+| D5300 | — | 🟧 needs analysis; local 1.03 sample did not auto-detect the standard table/labels |
 | D3300 | — | 🟧 needs analysis; local 1.02 sample did not auto-detect the standard table/labels |
-| D3500 | — | 🟨 scanner-ready; no local module |
+| D3500 | — | 🟥 missing complete firmware/module; no profile yet |
 
 Legend:
 
@@ -164,14 +174,20 @@ Legend:
   module and add one;
 - 🟧 **needs analysis**: a local sample exists, but the standard 0x1C table/UTF-16
   labels were not auto-detected;
+- 🟥 **missing data**: no complete firmware/module is available, so no profile;
 - ⛔ **out of scope**: D5/D500/D7500/D850 are EXPEED 5; Z series and Nikon 1 are
   different platforms.
 
 ### Recent changes
 
+- **2026-11-15** — added D4S/D5500/D5600/D810A profiles (stock-checked);
+  D5300/D3300 are needs-analysis, D3500 is missing firmware. Eight profiles total,
+  **only D7200 camera-tested**.
 - **2026-11-15** — added the full EXPEED 4 support matrix
-  [SUPPORT.md](SUPPORT.md): D4S/D810A/D5300/D5500/D5600/D3300/D3500 status is now
-  explicit; D3400 remains packaging B with K8 unknown.
+  [SUPPORT.md](SUPPORT.md); D3400's K8 was recovered as `AF08FBDBB582B587`, so
+  `--k8` can recompute the digest, but camera acceptance is unverified.
+- **2026-11-15** — documentation audit: removed the stale "D3400 K8 unknown"
+  entry.
 - **2026-11-13** — D3400 C 1.13 profile; bilingual README, CONTRIBUTING, LEGAL,
   SECURITY, CODE_OF_CONDUCT, CHANGELOG and FAQ.
 - **2026-11-13** — initial D7200/D750/D810 profiles, scanner and
@@ -249,13 +265,15 @@ sequence:
 
 ## D3400 / packaging B
 
-The D3400 header is 32-byte packaging B and contains `SHA1(body || K8)`. K8 is not
-available here, so:
+The D3400 header is 32-byte packaging B and contains `SHA1(body || K8)`. Its K8
+was recovered on 2026-11-15 as `AF08FBDBB582B587`, so:
 
 - the D3400 **module profile is stock-checked**;
-- the default repack refuses to write a complete image with a stale header;
-- `--allow-stale-header` bypasses that check, but the camera may reject it;
-- until K8 is available, do not treat a D3400 full image as flashable.
+- a complete image can be verified and the digest recomputed with
+  `repack_firmware.py --k8 <k8.json>`;
+- without `--k8` the default repack still refuses to write a stale header;
+  `--allow-stale-header` is only for CRC/QEMU tests;
+- a correct digest still does not prove the camera accepts the image.
 
 ## Repository layout
 
