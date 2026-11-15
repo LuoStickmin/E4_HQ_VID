@@ -1,6 +1,6 @@
 # E4_HQ_VID
 
-[中文](README.md) | [English](README.en.md)
+[中文](README.md) | [English](README.en.md) | [Support matrix](SUPPORT.md)
 
 > ## ⚠️ Disclaimer
 >
@@ -139,16 +139,45 @@ includes D7200, D750, D810 and D3400 profiles plus a generic scan/patch flow.
 
 ## Supported models
 
-| Model | Profile | Change | Verification |
-| --- | --- | --- | --- |
-| D7200 C 1.04 | `d7200_hq64.json` | 1080p60 HQ 64/60 Mbps; `1080 60p Hq` | stock-checked + camera-tested by the author (bitrate/playback OK) |
-| D750 1.15 | `d750_hq64.json` | 1080p60 HQ 64/60 Mbps; `1080 60p Hq` | stock-checked; not camera-tested |
-| D810 1.14 | `d810_hq64.json` | 1080p60 HQ 64/60 Mbps; `1080 60p Hq` | stock-checked; not camera-tested |
-| D3400 C 1.13 | `d3400_hq64.json` | 1080p60 HQ 64/60 Mbps; frame-size + combined `Hq` labels | stock-checked; not camera-tested; packaging B |
+There are 11 EXPEED 4 DSLRs. Four have profiles ready; the rest can be brought
+up with the scanner. Full status, packaging and notes: [SUPPORT.md](SUPPORT.md).
 
-“Stock-checked” means the script verified the table entry, rates, label offsets
-and lengths. “Camera-tested” means the author flashed it and confirmed bitrate
-and playback. They are not the same thing.
+| Model | Profile | Status |
+| --- | --- | --- |
+| D7200 C 1.04 | `d7200_hq64.json` | ✅ camera-tested; 64/60 Mbps + `Hq` |
+| D750 1.15 | `d750_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
+| D810 1.14 | `d810_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
+| D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock-checked; packaging B, K8 unknown |
+| D810A | — | 🟨 scanner-ready; do not reuse D810 offsets blindly |
+| D4S | — | 🟨 scanner-ready; no local module |
+| D5300 | — | 🟨 scanner-ready; no local module |
+| D5500 | — | 🟨 scanner-ready; no local module |
+| D5600 | — | 🟨 scanner-ready; no local module |
+| D3300 | — | 🟧 needs analysis; local 1.02 sample did not auto-detect the standard table/labels |
+| D3500 | — | 🟨 scanner-ready; no local module |
+
+Legend:
+
+- ✅ **camera-tested**: flashed by the author; bitrate/playback confirmed;
+- 🟩 **stock-checked**: profile verified against stock table/labels; not flashed;
+- 🟨 **scanner-ready**: no profile; run `scan_movie_modes.py` on a decrypted
+  module and add one;
+- 🟧 **needs analysis**: a local sample exists, but the standard 0x1C table/UTF-16
+  labels were not auto-detected;
+- ⛔ **out of scope**: D5/D500/D7500/D850 are EXPEED 5; Z series and Nikon 1 are
+  different platforms.
+
+### Recent changes
+
+- **2026-11-15** — added the full EXPEED 4 support matrix
+  [SUPPORT.md](SUPPORT.md): D4S/D810A/D5300/D5500/D5600/D3300/D3500 status is now
+  explicit; D3400 remains packaging B with K8 unknown.
+- **2026-11-13** — D3400 C 1.13 profile; bilingual README, CONTRIBUTING, LEGAL,
+  SECURITY, CODE_OF_CONDUCT, CHANGELOG and FAQ.
+- **2026-11-13** — initial D7200/D750/D810 profiles, scanner and
+  decrypt/repack toolchain.
+
+Full history: [CHANGELOG.md](CHANGELOG.md).
 
 ## How it works
 
@@ -238,6 +267,7 @@ E4_HQ_VID/
   tools/                    decrypt + repack toolchain
   tests/                    stock-check/scanner tests
   docs/                     usage, add-model, FAQ
+  SUPPORT.md                full EXPEED 4 support matrix
   keys/                     put key_all.json here (git-ignored)
 ```
 

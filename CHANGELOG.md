@@ -5,6 +5,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-15
+
+### Added
+- `SUPPORT.md`: complete EXPEED 4 DSLR support matrix (D4S, D750, D810, D810A,
+  D7200, D5300, D5500, D5600, D3300, D3400, D3500) with status, packaging and
+  limitations.
+- README “最近更新 / Recent changes” short changelog and the 11-model overview
+  table.
+
+### Changed
+- README supported-model section now links to `SUPPORT.md` and separates
+  camera-tested, stock-checked, scanner-ready and needs-analysis models.
+- Clarified that D4S/D810A/D5300/D5500/D5600/D3300/D3500 have no profile yet.
+
+## [0.2.1] - 2026-11-13
+
 ### Added
 - Bilingual README (`README.md`, `README.en.md`) with the disclaimer first and
   a copy-paste D7200 reproduction block.
@@ -12,6 +28,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   profile checklist and legal rules.
 - `LEGAL.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `CHANGELOG.md`.
 - `docs/FAQ.md`.
+- GitHub issue/PR templates and `.gitattributes`.
 
 ## [0.2.0] - 2026-11-13
 

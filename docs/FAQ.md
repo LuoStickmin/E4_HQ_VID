@@ -92,6 +92,12 @@ python scan_movie_modes.py --module <b...>.bin --model <MODEL>
 `--check`，再 `--out`，最后重封包并回读验证。详见
 [ADD_MODEL.md](ADD_MODEL.md)。
 
+## 支持哪些 EXPEED 4 机型？
+
+见 [SUPPORT.md](../SUPPORT.md) 的完整矩阵：D4S、D750、D810、D810A、D7200、
+D5300、D5500、D5600、D3300、D3400、D3500。已有 profile 的是 D7200、D750、
+D810、D3400；其余是 scanner-ready 或待分析，不代表已经验证。
+
 ## 为什么 README 里 D7200 有精确 SHA，其他机型没有？
 
 D7200 是作者实际刷入并验证的当前状态，所以给出模块和镜像的精确 SHA。

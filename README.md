@@ -1,6 +1,6 @@
 # E4_HQ_VID
 
-[中文](README.md) | [English](README.en.md)
+[中文](README.md) | [English](README.en.md) | [支持矩阵](SUPPORT.md)
 
 > ## ⚠️ 免责声明
 >
@@ -128,15 +128,42 @@ D7200、D750、D810、D3400 的 profile 和通用扫描/补丁流程。
 
 ## 支持的机型
 
-| 机型 | Profile | 改动 | 校验状态 |
-| --- | --- | --- | --- |
-| D7200 C 1.04 | `d7200_hq64.json` | 1080p60 HQ 64/60 Mbps；`1080 60p Hq` | stock 校验 + 作者真机实测（码率/回放正常） |
-| D750 1.15 | `d750_hq64.json` | 1080p60 HQ 64/60 Mbps；`1080 60p Hq` | stock 校验；未真机验证 |
-| D810 1.14 | `d810_hq64.json` | 1080p60 HQ 64/60 Mbps；`1080 60p Hq` | stock 校验；未真机验证 |
-| D3400 C 1.13 | `d3400_hq64.json` | 1080p60 HQ 64/60 Mbps；帧尺寸 + 合并式 `Hq` 标签 | stock 校验；未真机验证；packaging B |
+EXPEED 4 单反共 11 款；已有 profile 的 4 款可以直接用，其余先用扫描器加。
+完整状态、封装和备注见 [SUPPORT.md](SUPPORT.md)。
 
-“stock 校验”指脚本确认了原厂表项、码率、标签偏移和长度；“真机实测”指作者
-在相机上刷入并确认码率和回放。两者不是一回事。
+| 机型 | Profile | 状态 |
+| --- | --- | --- |
+| D7200 C 1.04 | `d7200_hq64.json` | ✅ 真机实测；64/60 Mbps + `Hq` |
+| D750 1.15 | `d750_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
+| D810 1.14 | `d810_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
+| D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock 校验；packaging B，K8 未知 |
+| D810A | — | 🟨 scanner-ready；不要直接套 D810 偏移 |
+| D4S | — | 🟨 scanner-ready；无本地模块 |
+| D5300 | — | 🟨 scanner-ready；无本地模块 |
+| D5500 | — | 🟨 scanner-ready；无本地模块 |
+| D5600 | — | 🟨 scanner-ready；无本地模块 |
+| D3300 | — | 🟧 待分析；本地 1.02 样本未自动识别标准表/标签 |
+| D3500 | — | 🟨 scanner-ready；无本地模块 |
+
+状态说明：
+
+- ✅ **真机实测**：作者已刷入并确认码率/回放；
+- 🟩 **stock 校验**：profile 核对过原厂表项、码率、标签偏移/长度，但未上机；
+- 🟨 **scanner-ready**：没有 profile，可用 `scan_movie_modes.py` 在解密模块上
+  定位表和标签，再写 profile；
+- 🟧 **待分析**：有本地样本，但标准 0x1C 表/UTF-16 标签没有自动识别；
+- ⛔ **不在范围**：D5/D500/D7500/D850 是 EXPEED 5，Z 系列/Nikon 1 是不同平台。
+
+### 最近更新
+
+- **2026-11-15** — 新增完整 EXPEED 4 支持矩阵 [SUPPORT.md](SUPPORT.md)：
+  D4S/D810A/D5300/D5500/D5600/D3300/D3500 明确标记状态；D3400 仍是
+  packaging B、K8 未知。
+- **2026-11-13** — D3400 C 1.13 profile；双语 README、CONTRIBUTING、LEGAL、
+  SECURITY、CODE_OF_CONDUCT、CHANGELOG、FAQ。
+- **2026-11-13** — 初始 D7200/D750/D810 profile、扫描器、解密/重封包工具链。
+
+完整历史见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 工作原理
 
@@ -222,6 +249,7 @@ E4_HQ_VID/
   tools/                    解密 + 重封包工具链
   tests/                    stock 校验/扫描器测试
   docs/                     用法、加机型、FAQ
+  SUPPORT.md                EXPEED 4 全机型支持矩阵
   keys/                     key_all.json 放这里（gitignore）
 ```
 
