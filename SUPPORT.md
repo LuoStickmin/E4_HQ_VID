@@ -32,14 +32,15 @@
 | D7200 | 2015-03 | `d7200_hq64.json` | A | ✅ 真机实测 | 1080p60 HQ 64/60 Mbps + `Hq`；码率/回放正常 |
 | D5300 | 2013-10 | — | A（本地样本） | 🟧 待分析 | 本地 1.03 样本未找到标准 0x1C 表/UTF-16 标签；布局可能不同 |
 | D5500 | 2015-01 | `d5500_hq64.json` | A | 🟩 stock 校验 | 1080p60 HQ 64/60 Mbps；帧尺寸 + 合并式 `Hq` 标签 |
-| D5600 | 2016-11 | `d5600_hq64.json` | **B（加密）** | 🟩 stock 校验（模块级） | 1080p60 HQ 64/60 Mbps；该机型 K8 未恢复，完整镜像不能安全重签 |
+| D5600 | 2016-11 | `d5600_hq64.json` | **B（加密）** | 🟩 stock 校验（模块级） | 1080p60 HQ 64/60 Mbps；K8 已恢复（`6FA0738BE53A7DE7`），完整镜像已做容器层重封包+回读验证，相机接受度未验证 |
 | D3300 | 2014-01 | — | A（本地样本） | 🟧 待分析 | 本地 1.02 样本未找到标准 0x1C 表/UTF-16 标签；布局可能不同 |
 | D3400 | 2016-08 | `d3400_hq64.json` | **B（加密）** | 🟩 stock 校验（模块级） | 1080p60 HQ 64/60 Mbps；K8 已恢复（`AF08FBDBB582B587`），完整镜像已做容器层重封包+回读验证，相机接受度未验证 |
 | D3500 | 2018-08 | — | 未验证 | 🟥 缺数据 | 本地没有完整镜像/模块；需要相机 dump 或完整固件才能做 |
 
 “封装 A/B”以实际样本为准；未验证的机型可能在 A/B 之间不同。A 没有 header
 digest；B 的 32 字节头含 `SHA1(body || K8)`，改 body 需要对应机型的 K8
-重算摘要（D3400 的 K8 已恢复；D5600 的 K8 未知；重算不等于相机验签通过）。
+重算摘要（D3400 的 K8 已恢复为 `AF08FBDBB582B587`；D5600 的 K8 已恢复为
+`6FA0738BE53A7DE7`；重算不等于相机验签通过）。
 
 ### 不在范围
 
@@ -89,15 +90,16 @@ digest；B 的 32 字节头含 `SHA1(body || K8)`，改 body 需要对应机型�
 | D7200 | 2015-03 | `d7200_hq64.json` | A | ✅ camera-tested | 1080p60 HQ 64/60 Mbps + `Hq`; bitrate/playback OK |
 | D5300 | 2013-10 | — | A (local sample) | 🟧 needs analysis | local 1.03 sample did not expose the standard 0x1C table/UTF-16 labels |
 | D5500 | 2015-01 | `d5500_hq64.json` | A | 🟩 stock-checked | 1080p60 HQ 64/60 Mbps; frame-size + combined `Hq` labels |
-| D5600 | 2016-11 | `d5600_hq64.json` | **B (encrypted)** | 🟩 stock-checked (module) | 1080p60 HQ 64/60 Mbps; this model's K8 is not recovered, no safe full-image re-sign |
+| D5600 | 2016-11 | `d5600_hq64.json` | **B (encrypted)** | 🟩 stock-checked (module) | 1080p60 HQ 64/60 Mbps; K8 recovered (`6FA0738BE53A7DE7`); full image repack + decrypt round-trip verified, camera acceptance untested |
 | D3300 | 2014-01 | — | A (local sample) | 🟧 needs analysis | local 1.02 sample did not expose the standard 0x1C table/UTF-16 labels |
 | D3400 | 2016-08 | `d3400_hq64.json` | **B (encrypted)** | 🟩 stock-checked (module) | 1080p60 HQ 64/60 Mbps; K8 recovered (`AF08FBDBB582B587`); full image repack + decrypt round-trip verified, camera acceptance untested |
 | D3500 | 2018-08 | — | unverified | 🟥 missing data | no local full image/module; needs a camera dump or complete firmware |
 
 Packaging A/B is per sample; unverified models may differ. A has no header digest.
 B has a 32-byte header containing `SHA1(body || K8)`; changing the body requires
-the model's K8 to recompute the digest (D3400's K8 is recovered; D5600's is
-unknown; a matching digest still does not prove camera acceptance).
+the model's K8 to recompute the digest (D3400's K8 is `AF08FBDBB582B587`;
+D5600's is `6FA0738BE53A7DE7`; a matching digest still does not prove camera
+acceptance).
 
 ### Out of scope
 

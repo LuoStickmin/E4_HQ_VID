@@ -119,6 +119,9 @@ python nikon_movie_patch.py --module <b...>.bin \
 真机验证。详见 [docs/USAGE.md](docs/USAGE.md) 与同作者的
 [k8-dslr 记录](https://github.com/LuoStickmin/Nikon-Expeed-4-and-5-firmware-tool/blob/main/docs/k8-dslr.md)。
 
+**D5600 也是 packaging B**：K8 已恢复为 `6FA0738BE53A7DE7`；完整镜像已用
+`--k8` 做重封包 + 解密回读验证（容器层一致）。相机是否接受仍未做真机验证。
+
 ## 这个仓库是什么
 
 `E4_HQ_VID` 是一个面向 EXPEED 4 尼康单反的**数据驱动**电影模式补丁工具集：
@@ -148,7 +151,7 @@ EXPEED 4 单反共 11 款；已有 profile 的 8 款可以直接用，剩余 3 �
 | D810A 1.03 | `d810a_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
 | D4S 1.33 | `d4s_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
 | D5500 1.02 | `d5500_hq64.json` | 🟩 stock 校验；64/60 Mbps + `Hq` |
-| D5600 1.20 | `d5600_hq64.json` | 🟩 stock 校验；packaging B，该机型 K8 未恢复 |
+| D5600 1.20 | `d5600_hq64.json` | 🟩 stock 校验；packaging B，K8 已恢复，完整镜像容器层已验证 |
 | D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock 校验；packaging B，K8 已恢复，完整镜像容器层已验证 |
 | D5300 | — | 🟧 待分析；本地 1.03 样本未自动识别标准表/标签 |
 | D3300 | — | 🟧 待分析；本地 1.02 样本未自动识别标准表/标签 |

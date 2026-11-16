@@ -20,7 +20,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - D4S 1.33 profile (`d4s_hq64.json`, table `0x262F48`).
 - D5500 1.02 profile (`d5500_hq64.json`, table `0x2D0334`, combined labels).
 - D5600 1.20 profile (`d5600_hq64.json`, table `0x301C8C`, combined labels,
-  packaging B with K8 unknown).
+  packaging B; K8 recovered as `6FA0738BE53A7DE7`).
 - D810A 1.03 profile (`d810a_hq64.json`, table `0x28B940`).
 - `module` field in every profile, so the main module is explicit.
 

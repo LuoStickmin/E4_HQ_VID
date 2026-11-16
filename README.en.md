@@ -127,6 +127,10 @@ decrypted again to confirm container-level consistency. Camera acceptance is
 still unverified. See [docs/USAGE.md](docs/USAGE.md) and the author's
 [k8-dslr record](https://github.com/LuoStickmin/Nikon-Expeed-4-and-5-firmware-tool/blob/main/docs/k8-dslr.en.md).
 
+**D5600 is also packaging B**: its K8 was recovered as `6FA0738BE53A7DE7`; a
+complete image has been repacked with `--k8` and decrypted again to confirm
+container-level consistency. Camera acceptance is still unverified.
+
 ## What this repository is
 
 `E4_HQ_VID` is a **data-driven** movie-mode patcher for Nikon EXPEED 4 DSLRs:
@@ -160,7 +164,7 @@ firmware/layout limitations. Full status, packaging and notes: [SUPPORT.md](SUPP
 | D810A 1.03 | `d810a_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
 | D4S 1.33 | `d4s_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
 | D5500 1.02 | `d5500_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
-| D5600 1.20 | `d5600_hq64.json` | 🟩 stock-checked; packaging B, this model's K8 is not recovered |
+| D5600 1.20 | `d5600_hq64.json` | 🟩 stock-checked; packaging B, K8 recovered, full image container-tested |
 | D3400 C 1.13 | `d3400_hq64.json` | 🟩 stock-checked; packaging B, K8 recovered, full image container-tested |
 | D5300 | — | 🟧 needs analysis; local 1.03 sample did not auto-detect the standard table/labels |
 | D3300 | — | 🟧 needs analysis; local 1.02 sample did not auto-detect the standard table/labels |
