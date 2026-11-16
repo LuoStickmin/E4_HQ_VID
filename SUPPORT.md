@@ -18,7 +18,7 @@
 | 🟥 缺数据 | 没有可用的完整固件/模块，无法生成 profile |
 | ⛔ 不在范围 | 不是 EXPEED 4，或不是同一套 DSLR 容器/菜单 |
 
-> **只有 D7200 由作者真机实测。** D750/D810/D3400/D4S/D5500/D5600/D810A
+> **只有 D7200 和 D750 由作者真机实测。** D810/D3400/D4S/D5500/D5600/D810A
 > 都只是 stock 校验，不等于已经在相机上验证，更不等于“可安全刷写”。
 
 ### EXPEED 4 单反全表
@@ -26,7 +26,7 @@
 | 机型 | 发布 | Profile | 封装 | 状态 | 备注 |
 | --- | --- | --- | --- | --- | --- |
 | D4S | 2014-02 | `d4s_hq64.json` | A | 🟩 stock 校验 | 1080p60 HQ 64/60 Mbps；未真机验证 |
-| D750 | 2014-09 | `d750_hq64.json` | A | 🟩 stock 校验 | 1080p60 HQ 64/60 Mbps；未真机验证 |
+| D750 | 2014-09 | `d750_hq64.json` | A | ✅ 真机实测 | 1080p60 HQ 64/60 Mbps + `Hq`；实机验证通过 |
 | D810 | 2014-06 | `d810_hq64.json` | A（明文样本） | 🟩 stock 校验 | 1080p60 HQ 64/60 Mbps；未真机验证 |
 | D810A | 2015-02 | `d810a_hq64.json` | A | 🟩 stock 校验 | 1080p60 HQ 64/60 Mbps；未真机验证 |
 | D7200 | 2015-03 | `d7200_hq64.json` | A | ✅ 真机实测 | 1080p60 HQ 64/60 Mbps + `Hq`；码率/回放正常 |
@@ -76,7 +76,7 @@ digest；B 的 32 字节头含 `SHA1(body || K8)`，改 body 需要对应机型�
 | 🟥 missing data | no complete firmware/module is available, so no profile can be generated |
 | ⛔ out of scope | not EXPEED 4, or not the same DSLR container/menu |
 
-> **Only D7200 has been camera-tested by the author.** D750/D810/D3400/D4S/D5500/D5600/D810A
+> **Only D7200 and D750 have been camera-tested by the author.** D810/D3400/D4S/D5500/D5600/D810A
 > are stock-checked only; that is not the same as “verified safe to flash”.
 
 ### All EXPEED 4 DSLRs
@@ -84,7 +84,7 @@ digest；B 的 32 字节头含 `SHA1(body || K8)`，改 body 需要对应机型�
 | Model | Announced | Profile | Packaging | Status | Notes |
 | --- | --- | --- | --- | --- | --- |
 | D4S | 2014-02 | `d4s_hq64.json` | A | 🟩 stock-checked | 1080p60 HQ 64/60 Mbps; not camera-tested |
-| D750 | 2014-09 | `d750_hq64.json` | A | 🟩 stock-checked | 1080p60 HQ 64/60 Mbps; not camera-tested |
+| D750 | 2014-09 | `d750_hq64.json` | A | ✅ camera-tested | 1080p60 HQ 64/60 Mbps + `Hq`; hardware test passed |
 | D810 | 2014-06 | `d810_hq64.json` | A (plaintext sample) | 🟩 stock-checked | 1080p60 HQ 64/60 Mbps; not camera-tested |
 | D810A | 2015-02 | `d810a_hq64.json` | A | 🟩 stock-checked | 1080p60 HQ 64/60 Mbps; not camera-tested |
 | D7200 | 2015-03 | `d7200_hq64.json` | A | ✅ camera-tested | 1080p60 HQ 64/60 Mbps + `Hq`; bitrate/playback OK |

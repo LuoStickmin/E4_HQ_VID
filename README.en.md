@@ -152,14 +152,14 @@ generic scan/patch flow.
 There are 11 EXPEED 4 DSLRs. Eight have profiles ready; three are blocked by
 firmware/layout limitations. Full status, packaging and notes: [SUPPORT.md](SUPPORT.md).
 
-> **Rigor note: only D7200 has been camera-tested by the author.** All other
-> profiles are stock-checked, not flashed, and are not a guarantee that the
-> camera accepts the image.
+> **Rigor note: only D7200 and D750 have been camera-tested by the author.**
+> All other profiles are stock-checked, not flashed, and are not a guarantee
+> that the camera accepts the image.
 
 | Model | Profile | Status |
 | --- | --- | --- |
 | D7200 C 1.04 | `d7200_hq64.json` | ✅ camera-tested; 64/60 Mbps + `Hq` |
-| D750 1.15 | `d750_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
+| D750 1.15 | `d750_hq64.json` | ✅ camera-tested; 64/60 Mbps + `Hq` |
 | D810 1.14 | `d810_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
 | D810A 1.03 | `d810a_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
 | D4S 1.33 | `d4s_hq64.json` | 🟩 stock-checked; 64/60 Mbps + `Hq` |
@@ -184,9 +184,10 @@ Legend:
 
 ### Recent changes
 
+- **2026-11-16** — **D750 1.15 camera-tested and passed** (1080p60 HQ
+  64/60 Mbps + `Hq`); D7200 and D750 are now the two camera-tested profiles.
 - **2026-11-15** — added D4S/D5500/D5600/D810A profiles (stock-checked);
-  D5300/D3300 are needs-analysis, D3500 is missing firmware. Eight profiles total,
-  **only D7200 camera-tested**.
+  D5300/D3300 are needs-analysis, D3500 is missing firmware. Eight profiles total.
 - **2026-11-15** — added the full EXPEED 4 support matrix
   [SUPPORT.md](SUPPORT.md); D3400's K8 was recovered as `AF08FBDBB582B587`, so
   `--k8` can recompute the digest, but camera acceptance is unverified.

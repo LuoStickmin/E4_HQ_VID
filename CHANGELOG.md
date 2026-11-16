@@ -14,6 +14,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Removed stale "K8 unknown / cannot repack" wording from README, SUPPORT,
   USAGE and FAQ.
 
+## [0.4.1] - 2026-11-16
+
+### Changed
+- D750 1.15 profile **camera-tested and passed**: 1080p60 HQ 64/60 Mbps +
+  `Hq`, playback OK.
+- Status docs now list D7200 and D750 as camera-tested; the other six profiles
+  remain stock-checked only.
+
 ## [0.4.0] - 2026-11-15
 
 ### Added
@@ -26,7 +34,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 - Eight profiles now ship: D7200, D750, D810, D810A, D4S, D5500, D5600, D3400.
-- Only D7200 is camera-tested; all other profiles are stock-checked, not flashed.
+- At 0.4.0 only D7200 was camera-tested; D750 was verified later (0.4.1).
 - D5300/D3300 are marked needs-analysis (standard table/labels not found in the
   local samples); D3500 is marked missing-data (no complete firmware/module).
 
