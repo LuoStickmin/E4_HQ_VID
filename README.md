@@ -129,6 +129,8 @@ python nikon_movie_patch.py --module <b...>.bin \
 30 项 u32 毫秒值。`time_limit_patch.py` 可把整表改成 59:59。
 
 - 用法与机型见 [time_limits/README.md](time_limits/README.md)。
+- 原厂单段上限与 8/16/32/64 GB 卡累计时长见
+  [CARD_TIMES.md](time_limits/docs/CARD_TIMES.md)。
 - D7200 的 `d7200_hq64_50p.json` 把 60p/50p HQ 都提到 64/60；
   50p 镜像 `93974982…305288b` 只做了容器级验证。
 - **时长表不解除 4 GB 单文件上限**，也不修复相机回放需要的 `NCDT`；

@@ -138,6 +138,8 @@ time-limit table (30 u32 milliseconds; D750 1.15 at `0x2F2104`, D7200 1.04 at
 `0x2DDD98`), plus `time_limit_patch.py`, which can set the whole table to 59:59.
 
 - Models and usage: [time_limits/README.md](time_limits/README.md).
+- Stock per-clip limits and 8/16/32/64 GB card totals:
+  [CARD_TIMES.md](time_limits/docs/CARD_TIMES.md).
 - D7200 `d7200_hq64_50p.json` raises both 1080p60 and 1080p50 HQ to 64/60;
   the 50p image `93974982…305288b` is container-verified only.
 - The table does **not** lift the ~4 GB per-file cap or fix the camera's

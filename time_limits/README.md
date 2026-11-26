@@ -26,6 +26,10 @@ D810 1.14 有 Nikon-Patch 的整包补丁（`0x2BA67C`/`0x2EBBB0`），但那是
 D3300 1.02 的同类常量在 `0x1897D8`/`0x189CA4`，更像代码内常量，不是这张 30 项
 表，需单独分析。
 
+各档原厂单段上限与 8/16/32/64 GB 卡累计时长见
+[docs/CARD_TIMES.md](docs/CARD_TIMES.md)；4 GB/59:59 的单段表见
+[docs/MAX_DURATIONS.md](docs/MAX_DURATIONS.md)。
+
 ## 用法
 
 ```powershell
