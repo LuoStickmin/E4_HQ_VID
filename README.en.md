@@ -131,6 +131,18 @@ still unverified. See [docs/USAGE.md](docs/USAGE.md) and the author's
 complete image has been repacked with `--k8` and decrypted again to confirm
 container-level consistency. Camera acceptance is still unverified.
 
+## Movie time limits (D7200/D750)
+
+`time_limits/` contains a read-only scanner and data patcher for the E4 movie
+time-limit table (30 u32 milliseconds; D750 1.15 at `0x2F2104`, D7200 1.04 at
+`0x2DDD98`), plus `time_limit_patch.py`, which can set the whole table to 59:59.
+
+- Models and usage: [time_limits/README.md](time_limits/README.md).
+- D7200 `d7200_hq64_50p.json` raises both 1080p60 and 1080p50 HQ to 64/60;
+  the 50p image `93974982…305288b` is container-verified only.
+- The table does **not** lift the ~4 GB per-file cap or fix the camera's
+  `NCDT` playback requirement; see [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
+
 ## What this repository is
 
 `E4_HQ_VID` is a **data-driven** movie-mode patcher for Nikon EXPEED 4 DSLRs:

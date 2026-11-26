@@ -1,0 +1,52 @@
+{
+  "name": "d750_0115_time59",
+  "model": "D750",
+  "firmware": "1.15",
+  "module": "b1010_115a.bin",
+  "table": {
+    "offset": "0x2F2104",
+    "count": 30,
+    "stride": 4,
+    "unit": "ms"
+  },
+  "end_marker": 58348,
+  "target_seconds": 3599,
+  "expected": [
+    600000,
+    1200000,
+    600000,
+    1200000,
+    1200000,
+    1799000,
+    1200000,
+    1799000,
+    1200000,
+    1799000,
+    1200000,
+    1799000,
+    1200000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000,
+    1799000
+  ],
+  "notes": [
+    "E4 movie time caps are stored in milliseconds (600000 = 10 min, 1200000 = 20 min, 1799000 = 29:59).",
+    "This profile rewrites all 30 entries to 3599000 ms (59:59).",
+    "The table does not lift the 4 GB per-file cap: at 64 Mbps a file still ends near 8 min.",
+    "Apply to the stock b1010_115a.bin, then repack the container; the local QEMU copies are not flashable."
+  ]
+}

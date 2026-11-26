@@ -42,6 +42,12 @@ digest；B 的 32 字节头含 `SHA1(body || K8)`，改 body 需要对应机型�
 重算摘要（D3400 的 K8 已恢复为 `AF08FBDBB582B587`；D5600 的 K8 已恢复为
 `6FA0738BE53A7DE7`；重算不等于相机验签通过）。
 
+电影时长表补丁在 [`time_limits/`](time_limits/README.md)：D750 1.15 和
+D7200 1.04 可把 30 项 ms 表改成 59:59；D7200 另有 `d7200_hq64_50p.json`
+（60p/50p HQ 都到 64/60），50p 镜像只做了容器级验证。**时长表不解除约 4 GB
+单文件上限**，也不修复相机回放依赖的 `NCDT`；已知问题见
+[KNOWN_ISSUES.md](KNOWN_ISSUES.md)。
+
 ### 不在范围
 
 | 系列 | 原因 |
@@ -100,6 +106,13 @@ B has a 32-byte header containing `SHA1(body || K8)`; changing the body requires
 the model's K8 to recompute the digest (D3400's K8 is `AF08FBDBB582B587`;
 D5600's is `6FA0738BE53A7DE7`; a matching digest still does not prove camera
 acceptance).
+
+Movie time-limit patches live in [`time_limits/`](time_limits/README.md): D750
+1.15 and D7200 1.04 can set the 30-entry ms table to 59:59; D7200 also has
+`d7200_hq64_50p.json` (60p/50p HQ both 64/60), with the 50p image
+container-verified only. The table does **not** lift the ~4 GB per-file cap or
+fix the camera's `NCDT` playback requirement; see
+[KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 
 ### Out of scope
 

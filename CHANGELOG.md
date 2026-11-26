@@ -5,6 +5,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+- `time_limits/`: read-only scanner and data patcher for the E4 movie
+  time-limit table (u32 milliseconds). D750 1.15 table at `0x2F2104`, D7200
+  1.04 at `0x2DDD98`; profiles set the 30 entries to 59:59.
+- `time_limits/profiles/d7200_hq64_50p.json`: 1080p60 and 1080p50 HQ both
+  64/60 Mbps with `Hq` labels. The combined 50p + 59:59 image is
+  container-verified (SHA-256 `93974982…305288b`), not camera-tested.
+- `KNOWN_ISSUES.md`: the ~4 GB per-file cap, camera `NCDT` playback
+  requirement, 50p long-recording failure, LV estimate being card-based,
+  model/image compatibility and workarounds.
+
 ### Changed
 - Documentation audit: D3400's packaging-B `K8` is no longer "unknown". It was
   recovered as `AF08FBDBB582B587` on 2026-11-15 (see the sibling

@@ -122,6 +122,18 @@ python nikon_movie_patch.py --module <b...>.bin \
 **D5600 也是 packaging B**：K8 已恢复为 `6FA0738BE53A7DE7`；完整镜像已用
 `--k8` 做重封包 + 解密回读验证（容器层一致）。相机是否接受仍未做真机验证。
 
+## 电影时长表（D7200/D750）
+
+`time_limits/` 提供 E4 电影时长表的只读扫描与数据补丁：D750 1.15 表在
+`b1010_115a.bin` 的 `0x2F2104`，D7200 1.04 在 `b1230_104.bin` 的 `0x2DDD98`，
+30 项 u32 毫秒值。`time_limit_patch.py` 可把整表改成 59:59。
+
+- 用法与机型见 [time_limits/README.md](time_limits/README.md)。
+- D7200 的 `d7200_hq64_50p.json` 把 60p/50p HQ 都提到 64/60；
+  50p 镜像 `93974982…305288b` 只做了容器级验证。
+- **时长表不解除 4 GB 单文件上限**，也不修复相机回放需要的 `NCDT`；
+  已知 bug 与 workaround 见 [KNOWN_ISSUES.md](KNOWN_ISSUES.md)。
+
 ## 这个仓库是什么
 
 `E4_HQ_VID` 是一个面向 EXPEED 4 尼康单反的**数据驱动**电影模式补丁工具集：
