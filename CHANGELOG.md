@@ -12,9 +12,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `time_limits/profiles/d7200_hq64_50p.json`: 1080p60 and 1080p50 HQ both
   64/60 Mbps with `Hq` labels. The combined 50p + 59:59 image is
   container-verified (SHA-256 `93974982…305288b`), not camera-tested.
-- `KNOWN_ISSUES.md`: the ~4 GB per-file cap, camera `NCDT` playback
-  requirement, 50p long-recording failure, LV estimate being card-based,
-  model/image compatibility and workarounds.
+- `KNOWN_ISSUES.md`: known bugs, limitations and compatibility notes. The only
+  camera-side bug listed is the missing `NCDT` block on ~4 GB long recordings
+  (camera refuses playback). The 4 GB cap, 59:59 timer, card-based LV estimate,
+  60p/50p-only 64M scope and model/image rules are classified as limitations or
+  compatibility notes, not bugs.
 
 ### Changed
 - Documentation audit: D3400's packaging-B `K8` is no longer "unknown". It was

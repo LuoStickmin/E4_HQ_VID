@@ -132,7 +132,7 @@ python nikon_movie_patch.py --module <b...>.bin \
 - D7200 的 `d7200_hq64_50p.json` 把 60p/50p HQ 都提到 64/60；
   50p 镜像 `93974982…305288b` 只做了容器级验证。
 - **时长表不解除 4 GB 单文件上限**，也不修复相机回放需要的 `NCDT`；
-  已知 bug 与 workaround 见 [KNOWN_ISSUES.md](KNOWN_ISSUES.md)。
+  已知 bug、限制与兼容性说明见 [KNOWN_ISSUES.md](KNOWN_ISSUES.md)。
 
 ## 这个仓库是什么
 
