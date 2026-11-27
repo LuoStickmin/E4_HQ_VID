@@ -2,6 +2,8 @@
 
 [中文](README.md) | [English](README.en.md) | [Support matrix](SUPPORT.md)
 
+**Quick links:** [Clip length & 8/16/32/64 GB card times](time_limits/docs/CARD_TIMES.md) · [Known issues](KNOWN_ISSUES.md) · [Time-limit tools](time_limits/README.md)
+
 > ## ⚠️ Disclaimer
 >
 > - This project is **not affiliated with, authorized by, or endorsed by Nikon**.

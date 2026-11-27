@@ -2,6 +2,8 @@
 
 [中文](README.md) | [English](README.en.md) | [支持矩阵](SUPPORT.md)
 
+**快速链接：** [单段与 8/16/32/64 GB 卡时长](time_limits/docs/CARD_TIMES.md) · [已知问题](KNOWN_ISSUES.md) · [时长表工具](time_limits/README.md)
+
 > ## ⚠️ 免责声明
 >
 > - 本项目与尼康（Nikon）没有任何关联，未获尼康授权或背书；Nikon、EXPEED 等是其各自权利人的商标。
